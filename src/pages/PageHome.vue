@@ -61,7 +61,9 @@
           </div>
         </q-item-section>
 
-        <q-item-section side top> {{ qweet.date }} </q-item-section>
+        <q-item-section side top>
+          {{ relativeDate(qweet.date) }}
+        </q-item-section>
       </q-item>
     </q-list>
   </q-page>
@@ -69,6 +71,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import { formatDistance } from "date-fns";
 
 export default defineComponent({
   name: "PageHome",
@@ -93,6 +96,11 @@ export default defineComponent({
         },
       ],
     };
+  },
+  methods: {
+    relativeDate(value) {
+      return formatDistance(value, new Date());
+    },
   },
 });
 </script>
