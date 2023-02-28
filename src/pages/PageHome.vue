@@ -74,7 +74,14 @@
                   icon="fas fa-retweet"
                   size="sm"
                 />
-                <q-btn flat round color="grey" icon="far fa-heart" size="sm" />
+                <q-btn
+                  @click="toggleLiked(qweet)"
+                  flat
+                  round
+                  :color="qweet.liked ? 'red' : 'grey'"
+                  :icon="qweet.liked ? 'fas fa-heart' : 'far fa-heart'"
+                  size="sm"
+                />
                 <q-btn
                   flat
                   round
@@ -102,6 +109,7 @@ import {
   addDoc,
   doc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { defineComponent } from "vue";
 // import { formatDistance } from "date-fns";
@@ -128,13 +136,23 @@ export default defineComponent({
     };
   },
   methods: {
-    relativeDate(value) {
-      return formatDistance(value, new Date());
+    // relativeDate(value) {
+    //   return formatDistance(value, new Date());
+    // },
+    toggleLiked(qweet) {
+      console.log(qweet);
+      const washingtonRef = doc(db, "qweets", qweet.id);
+
+      // Set the "capital" field of the city 'DC'
+      updateDoc(washingtonRef, {
+        liked: !qweet.liked,
+      });
     },
     addNewQweet() {
       let newQweet = {
         content: this.newQweetContent,
         date: Date.now(),
+        liked: false,
       };
       // 本地端
       // this.qweets.unshift(newQweet);
@@ -159,6 +177,10 @@ export default defineComponent({
         }
         if (change.type === "modified") {
           console.log("Modified Qweet: ", qweetChange);
+          let index = this.qweets.findIndex(
+            (qweet) => qweet.id === qweetChange.id
+          );
+          Object.assign(this.qweets[index], qweetChange);
         }
         if (change.type === "removed") {
           console.log("Removed Qweet: ", qweetChange);
