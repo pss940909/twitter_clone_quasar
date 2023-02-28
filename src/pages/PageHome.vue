@@ -31,8 +31,8 @@
       </div>
     </div>
     <q-separator size="10px" color="grey-2" class="divider" />
-    <q-list>
-      <q-item class="q-py-md">
+    <q-list separator>
+      <q-item v-for="qweet in qweets" :key="qweet.date" class="q-py-md">
         <q-item-section avatar top>
           <q-avatar size="xl">
             <img src="https://cdn.quasar.dev/img/avatar5.jpg" />
@@ -45,10 +45,7 @@
             <span class="text-grey-7">@ashleyChen</span>
           </q-item-label>
           <q-item-label class="qweet-content text-body1">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam,
-            consequuntur aperiam inventore pl aceat totam quae at minus ducimus
-            quisquam laboriosam similique possimus repellat voluptatum
-            cupiditate magnam. Assumenda mollitia quibusdam sapiente.
+            {{ qweet.content }}
           </q-item-label>
           <div class="qweet-icons row justify-between q-mt-md">
             <q-btn
@@ -64,7 +61,7 @@
           </div>
         </q-item-section>
 
-        <q-item-section side top> 1 min ago </q-item-section>
+        <q-item-section side top> {{ qweet.date }} </q-item-section>
       </q-item>
     </q-list>
   </q-page>
@@ -78,6 +75,23 @@ export default defineComponent({
   data() {
     return {
       newQweetContent: "",
+      qweets: [
+        {
+          content:
+            "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Totam ipsum quas, ipsam, perferendis possimus sunt tenetur cumque doloremque maxime, libero consectetur cum voluptas. Assumenda qui quasi ullam. Adipisci, iusto minima.",
+          date: 1677551116103,
+        },
+        {
+          content:
+            "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Totam ipsum quas, ipsam, perferendis possimus sunt tenetur cumque doloremque maxime, libero consectetur cum voluptas. Assumenda qui quasi ullam. Adipisci, iusto minima.",
+          date: 1677551135429,
+        },
+        {
+          content:
+            "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Totam ipsum quas, ipsam, perferendis possimus sunt tenetur cumque doloremque maxime, libero consectetur cum voluptas. Assumenda qui quasi ullam. Adipisci, iusto minima.",
+          date: 1677551144776,
+        },
+      ],
     };
   },
 });
