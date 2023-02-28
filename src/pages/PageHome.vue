@@ -53,7 +53,7 @@
                   @ashleyChen
                   <br class="lt-sm" />
                   <span class="gt-xs">&bull;</span>
-                  {{ relativeDate(qweet.date) }}
+                  {{ qweet.date }}
                 </span>
               </q-item-label>
               <q-item-label class="qweet-content text-body1">
