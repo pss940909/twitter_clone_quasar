@@ -39,7 +39,7 @@
           enter-active-class="animated fadeIn slow"
           leave-active-class="animated fadeOut slow"
         >
-          <q-item v-for="qweet in qweets" :key="qweet.date" class="q-py-md">
+          <q-item v-for="qweet in qweets" :key="qweet.id" class="q-py-md">
             <q-item-section avatar top>
               <q-avatar size="xl">
                 <img src="https://cdn.quasar.dev/img/avatar5.jpg" />
@@ -100,9 +100,11 @@ import {
   orderBy,
   onSnapshot,
   addDoc,
+  doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { defineComponent } from "vue";
-import { formatDistance } from "date-fns";
+// import { formatDistance } from "date-fns";
 
 export default defineComponent({
   name: "PageHome",
@@ -142,18 +144,16 @@ export default defineComponent({
       this.newQweetContent = "";
     },
     deleteQweet(qweet) {
-      console.log("qweet", qweet);
-      let dateToDelete = qweet.date;
-      let index = this.qweets.findIndex((qweet) => qweet.date === dateToDelete);
-      this.qweets.splice(index, 1);
+      deleteDoc(doc(db, "qweets", qweet.id));
     },
   },
   mounted() {
     const q = query(collection(db, "qweets"), orderBy("date"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
+        let qweetChange = change.doc.data();
+        qweetChange.id = change.doc.id;
         if (change.type === "added") {
-          let qweetChange = change.doc.data();
           console.log("New Qweet: ", qweetChange);
           this.qweets.unshift(qweetChange);
         }
@@ -162,6 +162,10 @@ export default defineComponent({
         }
         if (change.type === "removed") {
           console.log("Removed Qweet: ", qweetChange);
+          let index = this.qweets.findIndex(
+            (qweet) => qweet.id === qweetChange.id
+          );
+          this.qweets.splice(index, 1);
         }
       });
     });
