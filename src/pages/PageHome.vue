@@ -93,6 +93,14 @@
 </template>
 
 <script>
+import db from "src/boot/firebase";
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  addDoc,
+} from "firebase/firestore";
 import { defineComponent } from "vue";
 import { formatDistance } from "date-fns";
 
@@ -102,18 +110,18 @@ export default defineComponent({
     return {
       newQweetContent: "",
       qweets: [
-        {
-          content: "The best way to predict your future is to create it.",
-          date: 1677551116103,
-        },
-        {
-          content: "Be the change you wish to see in the world.",
-          date: 1677551135429,
-        },
-        {
-          content: "The only way to do great work is to love what you do.",
-          date: 1677551144776,
-        },
+        // {
+        //   content: "The best way to predict your future is to create it.",
+        //   date: 1677551116103,
+        // },
+        // {
+        //   content: "Be the change you wish to see in the world.",
+        //   date: 1677551135429,
+        // },
+        // {
+        //   content: "The only way to do great work is to love what you do.",
+        //   date: 1677551144776,
+        // },
       ],
     };
   },
@@ -126,7 +134,11 @@ export default defineComponent({
         content: this.newQweetContent,
         date: Date.now(),
       };
-      this.qweets.unshift(newQweet);
+      // 本地端
+      // this.qweets.unshift(newQweet);
+      // Add a new document with a generated id.
+      const docRef = addDoc(collection(db, "qweets"), newQweet);
+      console.log("Document written with ID: ", docRef.id);
       this.newQweetContent = "";
     },
     deleteQweet(qweet) {
@@ -135,6 +147,24 @@ export default defineComponent({
       let index = this.qweets.findIndex((qweet) => qweet.date === dateToDelete);
       this.qweets.splice(index, 1);
     },
+  },
+  mounted() {
+    const q = query(collection(db, "qweets"), orderBy("date"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          let qweetChange = change.doc.data();
+          console.log("New Qweet: ", qweetChange);
+          this.qweets.unshift(qweetChange);
+        }
+        if (change.type === "modified") {
+          console.log("Modified Qweet: ", qweetChange);
+        }
+        if (change.type === "removed") {
+          console.log("Removed Qweet: ", qweetChange);
+        }
+      });
+    });
   },
 });
 </script>
