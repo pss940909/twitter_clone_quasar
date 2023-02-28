@@ -50,7 +50,7 @@
             quisquam laboriosam similique possimus repellat voluptatum
             cupiditate magnam. Assumenda mollitia quibusdam sapiente.
           </q-item-label>
-          <div class="row">
+          <div class="qweet-icons row justify-between q-mt-md">
             <q-btn
               flat
               round
@@ -94,5 +94,8 @@ export default defineComponent({
 }
 .qweet-content {
   white-space: pre-line;
+}
+.qweet-icons {
+  margin-left: -5px;
 }
 </style>
