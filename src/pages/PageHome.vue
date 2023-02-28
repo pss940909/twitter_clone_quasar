@@ -53,7 +53,7 @@
                   @ashleyChen
                   <br class="lt-sm" />
                   <span class="gt-xs">&bull;</span>
-                  {{ qweet.date }}
+                  {{ relativeDate(qweet.date) }}
                 </span>
               </q-item-label>
               <q-item-label class="qweet-content text-body1">
@@ -112,7 +112,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { defineComponent } from "vue";
-// import { formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 
 export default defineComponent({
   name: "PageHome",
@@ -136,9 +136,9 @@ export default defineComponent({
     };
   },
   methods: {
-    // relativeDate(value) {
-    //   return formatDistance(value, new Date());
-    // },
+    relativeDate(value) {
+      return formatDistance(value, new Date());
+    },
     toggleLiked(qweet) {
       console.log(qweet);
       const washingtonRef = doc(db, "qweets", qweet.id);
